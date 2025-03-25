@@ -9,5 +9,12 @@ module "eks" {
 
   enable_irsa = true
 
+  access_config = {
+    endpoint_public_access  = true
+    endpoint_private_access = true
+    public_access_cidrs     = ["0.0.0.0/0"]
+  }
+
   tags = var.tags
 }
+
