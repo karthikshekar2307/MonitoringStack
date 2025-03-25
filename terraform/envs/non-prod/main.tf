@@ -14,7 +14,36 @@ module "eks" {
   cluster_version    = "1.29"
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
-  tags               = var.tags
+  enable_irsa = true
+
+  
+  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true
+  cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
+
+
+  manage_aws_auth_configmap = true
+  create_aws_auth_configmap = true
+
+ 
+  aws_auth_users = [
+    {
+      userarn  = "arn:aws:iam::896553234455:user/karthikcli"
+      username = "karthikcli"
+      groups   = ["system:masters"]
+    }
+  ]
+
+  aws_auth_roles = [
+    {
+      rolearn  = "arn:aws:iam::896553234455:role/EKSMonGitOIDC"
+      username = "github-actions"
+      groups   = ["system:masters"]
+    }
+  ]
+
+  tags = var.tags
+
 }
   
 module "nodegroups" {
