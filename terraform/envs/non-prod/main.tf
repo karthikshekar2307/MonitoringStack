@@ -9,23 +9,23 @@ module "vpc" {
 }
 
 module "eks" {
-  source             = "../../modules/eks"
-  cluster_name       = "nonprod-monitoring-eks"
-  cluster_version    = "1.29"
-  vpc_id             = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnets
+  source  = "terraform-aws-modules/eks/aws"
+  version = "20.8.5"
+
+  cluster_name    = var.cluster_name
+  cluster_version = var.cluster_version
+  subnet_ids      = module.vpc.private_subnets
+  vpc_id          = module.vpc.vpc_id
+
   enable_irsa = true
 
-  
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
 
-
   manage_aws_auth_configmap = true
   create_aws_auth_configmap = true
 
- 
   aws_auth_users = [
     {
       userarn  = "arn:aws:iam::896553234455:user/karthikcli"
@@ -43,8 +43,8 @@ module "eks" {
   ]
 
   tags = var.tags
-
 }
+
   
 module "nodegroups" {
   source             = "../../modules/nodegroups"
