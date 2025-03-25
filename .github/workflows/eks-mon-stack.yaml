@@ -1,0 +1,62 @@
+name: Terraform Plan and Apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select the environment"
+        required: true
+        type: choice
+        options:
+          - non-prod
+          - prod
+      action:
+        description: "Terraform action"
+        required: true
+        type: choice
+        options:
+          - plan
+          - apply
+
+jobs:
+  terraform:
+    name: Terraform Job
+    runs-on: ubuntu-latest
+
+    env:
+      TF_INPUT: false
+      TF_IN_AUTOMATION: true
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set environment path
+        id: set-env-path
+        run: |
+          echo "env_path=terraform/envs/${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::896553234455:role/EKS-role-githubOIDC
+          aws-region: ap-southeast-2
+
+      - name: Terraform Init
+        working-directory: ${{ steps.set-env-path.outputs.env_path }}
+        run: terraform init
+
+      - name: Terraform Plan
+        if: ${{ github.event.inputs.action == 'plan' }}
+        working-directory: ${{ steps.set-env-path.outputs.env_path }}
+        run: terraform plan -var-file="terraform.tfvars"
+
+      - name: Terraform Apply
+        if: ${{ github.event.inputs.action == 'apply' }}
+        working-directory: ${{ steps.set-env-path.outputs.env_path }}
+        run: terraform apply -auto-approve -var-file="terraform.tfvars"
