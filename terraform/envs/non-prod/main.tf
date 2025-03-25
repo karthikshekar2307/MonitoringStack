@@ -23,8 +23,33 @@ module "eks" {
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
 
-  manage_aws_auth_configmap = true
-  create_aws_auth_configmap = true
+  # manage_aws_auth_configmap = true
+  # create_aws_auth_configmap = true
+
+  # aws_auth_users = [
+  #   {
+  #     userarn  = "arn:aws:iam::896553234455:user/karthikcli"
+  #     username = "karthikcli"
+  #     groups   = ["system:masters"]
+  #   }
+  # ]
+
+  # aws_auth_roles = [
+  #   {
+  #     rolearn  = "arn:aws:iam::896553234455:role/EKSMonGitOIDC"
+  #     username = "github-actions"
+  #     groups   = ["system:masters"]
+  #   }
+  # ]
+
+  tags = var.tags
+}
+
+module "aws_auth" {
+  source  = "terraform-aws-modules/eks/aws//modules/aws-auth"
+  version = "20.8.5"
+
+  eks_cluster_name = module.eks.cluster_name
 
   aws_auth_users = [
     {
@@ -41,8 +66,6 @@ module "eks" {
       groups   = ["system:masters"]
     }
   ]
-
-  tags = var.tags
 }
 
   
