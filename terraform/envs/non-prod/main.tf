@@ -49,7 +49,7 @@ module "aws_auth" {
   source  = "terraform-aws-modules/eks/aws//modules/aws-auth"
   version = "20.8.5"
 
-  eks_cluster_name = module.eks.cluster_name
+  cluster_name = module.eks.cluster_name 
 
   aws_auth_users = [
     {
@@ -67,6 +67,7 @@ module "aws_auth" {
     }
   ]
 }
+
 
   
 module "nodegroups" {
