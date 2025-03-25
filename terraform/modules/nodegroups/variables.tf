@@ -14,6 +14,11 @@ variable "tags" {
   type = map(string)
 }
 
+variable "cluster_service_cidr" {
+  type = string
+}
+
+
 variable "node_groups" {
   type = map(object({
     instance_types = list(string)
