@@ -16,13 +16,15 @@ module "eks" {
   private_subnet_ids = module.vpc.private_subnets
   tags               = var.tags
 }
-
+  
 module "nodegroups" {
   source             = "../../modules/nodegroups"
   cluster_name       = module.eks.cluster_name
   cluster_version    = "1.29"
   private_subnet_ids = module.vpc.private_subnets
   tags               = var.tags
+
+  cluster_service_cidr = "172.20.0.0/16"
 
   node_groups = {
     argocd = {
