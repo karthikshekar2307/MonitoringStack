@@ -17,3 +17,4 @@ module "node_groups" {
   taints          = each.value.taints
 
   tags = var.tags
+}
