@@ -7,6 +7,7 @@ module "node_groups" {
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
   subnet_ids      = var.private_subnet_ids
+  cluster_service_cidr    = var.cluster_service_cidr
 
   name            = each.key
   instance_types  = each.value.instance_types
