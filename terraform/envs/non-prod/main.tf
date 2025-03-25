@@ -46,8 +46,7 @@ module "eks" {
 }
 
 module "aws_auth" {
-  source  = "terraform-aws-modules/eks/aws//modules/aws-auth"
-  version = "20.8.5"
+  source = "github.com/terraform-aws-modules/terraform-aws-eks//modules/aws-auth?ref=v20.8.5"
 
   eks_cluster_name = "nonprod-monitoring-eks"
 
