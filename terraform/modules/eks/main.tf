@@ -9,11 +9,10 @@ module "eks" {
 
   enable_irsa = true
 
-  access_config = {
-    endpoint_public_access  = true
-    endpoint_private_access = true
-    public_access_cidrs     = ["0.0.0.0/0"]
-  }
+  # ✅ Enable public and private API endpoint access
+  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true
+  cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"] # Allow all (for now)
 
   tags = var.tags
 }
