@@ -74,3 +74,7 @@ module "nodegroups" {
   }
 }
 
+module "argocd" {
+  source    = "../../modules/argocd"
+  namespace = "argocd"
+}
